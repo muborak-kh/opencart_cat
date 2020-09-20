@@ -131,14 +131,18 @@ class ControllerProductCategory extends Controller {
 				'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'])
 			);
 
-			if ($category_info['image']) {
+			if ($category_info['image'] && $page == 1) {
 				$data['thumb'] = $this->model_tool_image->resize($category_info['image'], $this->config->get($this->config->get('config_theme') . '_image_category_width'), $this->config->get($this->config->get('config_theme') . '_image_category_height'));
 				$this->document->setOgImage($data['thumb']);
 			} else {
 				$data['thumb'] = '';
 			}
 
-			$data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
+			if ($page == 1) {
+            $data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
+            } else {
+            $data['description'] = "";
+            }
 			$data['compare'] = $this->url->link('product/compare');
 
 			$url = '';
@@ -178,7 +182,7 @@ class ControllerProductCategory extends Controller {
 			$data['products'] = array();
 
 			$filter_data = array(
-				'filter_category_id' => $category_id,
+				'filter_sub_category' => true,
 				'filter_filter'      => $filter,
 				'sort'               => $sort,
 				'order'              => $order,
